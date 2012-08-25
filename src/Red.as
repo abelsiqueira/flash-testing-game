@@ -16,10 +16,10 @@ package
 
     private var sprRun:Spritemap = new Spritemap(RUN, 96, 96);
     private var sprPaused:Spritemap = new Spritemap(PAUSED, 96, 96);
-    private var sprFps:int = 8;
+    private var sprFps:int = 10;
     private var keyPressed:Vector.<Boolean> = new Vector.<Boolean>(4,false);
     private var direction:String;
-    private var speed:Number = 70;
+    private var speed:Number = 140;
 
     public function Red()
     {
@@ -42,6 +42,9 @@ package
       sprPaused.add("sw", [40, 41, 42, 43, 44, 45, 46, 47], sprFps, true);
       sprPaused.add("w",  [48, 49, 50, 51, 52, 53, 54, 55], sprFps, true);
       sprPaused.add("nw", [56, 57, 58, 59, 60, 61, 62, 63], sprFps, true);
+      //var scale:Number = 0.8;
+      //sprRun.scale = scale;
+      //sprPaused.scale = scale;
       graphic = sprPaused;
       sprPaused.play("e");
       direction = "e";
