@@ -21,8 +21,9 @@ package
     private var direction:String;
     private var speed:Number = 140;
 
-    public function Red()
+    public function Red(side:String)
     {
+      type=side;
       keyPressed[0] = false; keyPressed[1] = false;
       keyPressed[2] = false; keyPressed[3] = false;
       setHitbox(96, 96);

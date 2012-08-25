@@ -12,7 +12,9 @@ package
     {
       var background:Backdrop = new Backdrop(BACKGROUND);
       addGraphic(background);
-      add(new Red);
+      add(new Red("ally"));
+      add(new Spider("enemy"));
+      add(new Spider("enemy"));
     }
 
   }
