@@ -22,6 +22,7 @@ package
     protected var attackDuration:Number = 4;
     protected var state:String = "idle";
     protected var maxHP:int, HP:int;
+    protected var nearEnemy:MyEntity = null;
 
     public function MyEntity(allegiance:String, xx:int, yy:int)
     {
@@ -52,17 +53,69 @@ package
           attackCounter = 0;
         }
       }
-      var enemy:MyEntity; 
-      if (type == "enemy")
-        enemy = collide("ally", x, y) as MyEntity;
-      else if (type == "ally")
-        enemy = collide("enemy", x, y) as MyEntity;
 
-      if (enemy && attackCounter == 0)
-        attack(enemy);
+      if (type == "enemy") {
+        GetNearestEnemy("ally");
+        if (world.typeCount("ally") == 0) {
+          //movement();
+          return;
+        }
+      } else if (type == "ally") {
+        GetNearestEnemy("enemy");
+        if (world.typeCount("enemy") == 0) {
+          //movement();
+          return;
+        }
+      }
+
+      if (collideWith(nearEnemy, x, y) && attackCounter == 0)
+        attack(nearEnemy);
       else {
+        MoveToNearestEntity();
         movement();
         sprMove.color = 0xffffff;
+      }
+    }
+
+    protected function GetNearestEnemy(al:String):void 
+    {
+      if (world.typeCount(al) == 0) {
+        nearEnemy = null;
+        return;
+      }
+      var enemies:Vector.<MyEntity>;
+      world.getType(al, enemies);
+      var minDist:Number = 100000;
+      var d:Number;
+      for each (var en:MyEntity in enemies) {
+        d = distanceFrom(en, false);
+        if (d < minDist) {
+          minDist = d;
+          nearEnemy = en;
+        }
+      }
+    }
+
+    protected function MoveToNearestEntity():void
+    {
+      if ( (type == "ally" && world.typeCount("enemy") == 0) ||
+           (type == "enemy" && world.typeCount("ally") == 0) ) {
+        sprMove.color = 0x0000ff;
+        return;
+      }
+      if (x < nearEnemy.x - 5) {
+        keyPressed[1] = true;
+        keyPressed[3] = false;
+      } else if (x > nearEnemy.x + 5) {
+        keyPressed[1] = false;
+        keyPressed[3] = true;
+      }
+      if (y < nearEnemy.y - 5) {
+        keyPressed[0] = false;
+        keyPressed[2] = true;
+      } else if (y > nearEnemy.y + 5) {
+        keyPressed[0] = true;
+        keyPressed[2] = false;
       }
     }
 
