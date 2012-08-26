@@ -14,7 +14,7 @@ package
     [Embed(source = '../assets/red_swordsman/paused.png')]
     private const STOP:Class;
 
-    public function Red(allegiance:String)
+    public function Red(allegiance:String, xx:int, yy:int)
     {
       sprFps = 10;
       sprMove = new Spritemap(MOVE, 96, 96);
@@ -36,11 +36,10 @@ package
       sprStop.add("w",  [48, 49, 50, 51, 52, 53, 54, 55], sprFps, true);
       sprStop.add("nw", [56, 57, 58, 59, 60, 61, 62, 63], sprFps, true);
 
-      super(allegiance);
+      super(allegiance, xx, yy);
 
       graphic = sprStop;
-      sprStop.play("e");
-      x = 400; y = 300;
+      sprStop.play(direction);
       speed = 150;
       Input.define("Left", Key.LEFT);
       Input.define("Right", Key.RIGHT);

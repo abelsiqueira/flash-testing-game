@@ -17,29 +17,48 @@ package
     protected var direction:String;
     protected var speed:Number = 10;
     //protected var scale:Number = 0.8;
+    protected var attackCounter:Number = 0;
+    protected var attackCooldown:Number = 4;
+    protected var attackDuration:Number = 4;
+    protected var state:String = "idle";
+    protected var maxHP:int, HP:int;
 
-    public function MyEntity(allegiance:String)
+    public function MyEntity(allegiance:String, xx:int, yy:int)
     {
       type = allegiance;
+      x = xx; y = yy;
+
       keyPressed[0] = false; 
       keyPressed[1] = false; 
       keyPressed[2] = false; 
       keyPressed[3] = false;
       setHitbox(96, 96);
-      direction = "e";
-
-      x = 200; y = 300;
+      direction = "s";
     }
 
     override public function update():void
     {
+      if (state == "attack") {
+        attackCounter -= FP.elapsed;
+        if (attackCounter <= 0) {
+          attackCounter = attackCooldown;
+          state = "idle";
+        }
+        return;
+      }
+      if (attackCounter > 0) {
+        attackCounter -= FP.elapsed;
+        if (attackCounter <= 0) {
+          attackCounter = 0;
+        }
+      }
       var enemy:MyEntity; 
       if (type == "enemy")
         enemy = collide("ally", x, y) as MyEntity;
       else if (type == "ally")
         enemy = collide("enemy", x, y) as MyEntity;
 
-      if (enemy)
+      if (enemy && attackCounter == 0)
         attack(enemy);
       else {
         movement();
@@ -49,6 +68,8 @@ package
 
     protected function attack(enemy:MyEntity):void
     {
+      attackCounter = attackDuration;
+      state = "attack";
       var dx:Number = enemy.x - x;
       var dy:Number = enemy.y - y;
       var theta:Number = Math.atan2(dy, dx);
