@@ -66,7 +66,12 @@ package
         keyPressed[3] = true;
       else
         keyPressed[3] = false;
-      super.update();
+      //super.update();
+      super.movement();
+    }
+
+    override protected function attack(enemy:MyEntity):void
+    {
     }
 
   }

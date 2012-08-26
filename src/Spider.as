@@ -22,6 +22,7 @@ package
       sprFps = 8;
       speed = 30;
       sprMove = new Spritemap(MOVE, 96, 96);
+      sprAttack = new Spritemap(ATTACK, 96, 96);
       sprMove.add("n",  [ 0,  1,  2,  3,  4,  5,  6,  7], sprFps, true);
       sprMove.add("ne", [ 8,  9, 10, 11, 12, 13, 14, 15], sprFps, true);
       sprMove.add("e",  [16, 17, 18, 19, 20, 21, 22, 23], sprFps, true);
@@ -30,6 +31,14 @@ package
       sprMove.add("sw", [40, 41, 42, 43, 44, 45, 46, 47], sprFps, true);
       sprMove.add("w",  [48, 49, 50, 51, 52, 53, 54, 55], sprFps, true);
       sprMove.add("nw", [56, 57, 58, 59, 60, 61, 62, 63], sprFps, true);
+      sprAttack.add("n",  [ 0,  1,  2,  3,  4,  5,  6,  7,  8], sprFps, true);
+      sprAttack.add("ne", [ 9, 10, 11, 12, 13, 14, 15, 16, 17], sprFps, true);
+      sprAttack.add("e",  [18, 19, 20, 21, 22, 23, 24, 25, 26], sprFps, true);
+      sprAttack.add("se", [27, 28, 29, 30, 31, 32, 33, 34, 35], sprFps, true);
+      sprAttack.add("s",  [36, 37, 38, 39, 40, 41, 42, 43, 44], sprFps, true);
+      sprAttack.add("sw", [45, 46, 47, 48, 49, 50, 51, 52, 53], sprFps, true);
+      sprAttack.add("w",  [54, 55, 56, 57, 58, 59, 60, 61, 62], sprFps, true);
+      sprAttack.add("nw", [63, 64, 65, 66, 67, 68, 69, 70, 71], sprFps, true);
       //var scale:Number = 0.8;
       //sprMove.scale = scale;
 
@@ -43,8 +52,9 @@ package
       super.update();
     }
 
-    override protected function attack():void
+    override protected function attack(enemy:MyEntity):void
     {
+      super.attack(enemy);
       sprMove.color = 0x00ff00;
     }
 

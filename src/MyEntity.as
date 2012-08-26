@@ -33,21 +33,49 @@ package
 
     override public function update():void
     {
-      movement();
-      var enemy:Entity; 
+      var enemy:MyEntity; 
       if (type == "enemy")
-        enemy = collide("ally", x, y) as Entity;
+        enemy = collide("ally", x, y) as MyEntity;
       else if (type == "ally")
-        enemy = collide("enemy", x, y) as Entity;
+        enemy = collide("enemy", x, y) as MyEntity;
 
       if (enemy)
-        attack();
-      else
+        attack(enemy);
+      else {
+        movement();
         sprMove.color = 0xffffff;
+      }
     }
 
-    protected function attack():void
+    protected function attack(enemy:MyEntity):void
     {
+      var dx:Number = enemy.x - x;
+      var dy:Number = enemy.y - y;
+      var theta:Number = Math.atan2(dy, dx);
+      var pi:Number = Math.PI;
+      if (theta < -7*pi/8.0)
+        direction = "w";
+      else if (theta < -5*pi/8.0)
+        direction = "nw";
+      else if (theta < -3*pi/8.0)
+        direction = "n";
+      else if (theta < -pi/8.0)
+        direction = "ne";
+      else if (theta < pi/8.0)
+        direction = "e";
+      else if (theta < 3*pi/8.0)
+        direction = "se";
+      else if (theta < 5*pi/8.0)
+        direction = "s";
+      else if (theta < 7*pi/8.0)
+        direction = "sw";
+      else 
+        direction = "w";
+
+      if (sprAttack) {
+        graphic = sprAttack;
+        sprAttack.play(direction);
+      }
     }
 
     protected function movement():void
