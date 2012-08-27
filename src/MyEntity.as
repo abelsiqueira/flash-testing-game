@@ -1,6 +1,7 @@
 package
 {
   import net.flashpunk.Entity;
+  import net.flashpunk.utils.Draw;
   import net.flashpunk.graphics.Spritemap;
   import net.flashpunk.graphics.Image;
   import net.flashpunk.utils.Input;
@@ -18,11 +19,14 @@ package
     protected var speed:Number = 10;
     //protected var scale:Number = 0.8;
     protected var attackCounter:Number = 0;
-    protected var attackCooldown:Number = 4;
-    protected var attackDuration:Number = 4;
+    protected var attackCooldown:Number = 1;
+    protected var attackDuration:Number = 2;
+    protected var attackMoment:Number = 1;
     protected var state:String = "idle";
     protected var maxHP:int, HP:int;
+    protected var damage:int;
     protected var nearEnemy:MyEntity = null;
+    protected var willAttack:Boolean = false;
 
     public function MyEntity(allegiance:String, xx:int, yy:int)
     {
@@ -39,9 +43,14 @@ package
 
     override public function update():void
     {
+      
       if (state == "attack") {
         attackCounter -= FP.elapsed;
-        if (attackCounter <= 0) {
+        if (willAttack && attackCounter <= attackMoment) {
+          if (nearEnemy.receiveDamage(damage))
+            nearEnemy = null;
+          willAttack = false;
+        } else if (attackCounter <= 0) {
           attackCounter = attackCooldown;
           state = "idle";
         }
@@ -73,7 +82,6 @@ package
       else {
         MoveToNearestEntity();
         movement();
-        sprMove.color = 0xffffff;
       }
     }
 
@@ -102,7 +110,6 @@ package
     {
       if ( (type == "ally" && world.typeCount("enemy") == 0) ||
            (type == "enemy" && world.typeCount("ally") == 0) ) {
-        sprMove.color = 0x0000ff;
         return;
       }
       keyPressed[0] = false;
@@ -123,6 +130,7 @@ package
 
     protected function attack(enemy:MyEntity):void
     {
+      willAttack = true;
       attackCounter = attackDuration;
       state = "attack";
       var dx:Number = enemy.x - x;
@@ -150,7 +158,7 @@ package
 
       if (sprAttack) {
         graphic = sprAttack;
-        sprAttack.play(direction);
+        sprAttack.play(direction, true);
       }
     }
 
@@ -205,7 +213,7 @@ package
           graphic = sprMove;
           sprMove.play(direction);
         }
-        if (keyPressed[0])
+        if (keyPressed[0]) {
           y -= speed * FP.elapsed;
         else if (keyPressed[2])
           y += speed * FP.elapsed;
@@ -214,6 +222,33 @@ package
         else if (keyPressed[3])
           x -= speed * FP.elapsed;
       }
+    }
+
+    public function receiveDamage(dmg:int):Boolean
+    {
+      HP -= dmg;
+      if (HP <= 0) {
+        world.remove(this);
+        return true;
+      }
+      return false;
+    }
+
+    override public function render():void
+    {
+      super.render();
+      drawHP();
+      //Draw.rectPlus(x+originX, y+originY, width, height, 0x000000, 1, false);
+    }
+
+    protected function drawHP():void
+    {
+      var value:Number = HP/maxHP;
+      var bh:int = 10;
+      var bw:int = value*width;
+
+      Draw.rect(x + originX, y + originY, width, bh, 0xff0000, 0.5);
+      Draw.rect(x + originX, y + originY, bw, bh, 0x00ff00, 0.5);
     }
 
   }

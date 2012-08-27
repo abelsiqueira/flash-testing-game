@@ -1,6 +1,7 @@
 package
 {
   import net.flashpunk.World;
+  import net.flashpunk.utils.Draw;
   import net.flashpunk.graphics.Backdrop;
   import net.flashpunk.FP;
 

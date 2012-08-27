@@ -19,8 +19,11 @@ package
 
     public function Spider(allegiance:String, xx:int, yy:int)
     {
-      sprFps = 8;
-      speed = 30;
+      maxHP = 3;
+      HP = maxHP;
+      damage = 1;
+      sprFps = 12;
+      speed = 1000;
       sprMove = new Spritemap(MOVE, 96, 96);
       sprAttack = new Spritemap(ATTACK, 96, 96);
       sprMove.add("n",  [ 0,  1,  2,  3,  4,  5,  6,  7], sprFps, true);
@@ -43,8 +46,16 @@ package
       //sprMove.scale = scale;
 
       super(allegiance, xx, yy);
+      setHitbox(80, 66, 10, 16);
       graphic = sprMove;
       sprMove.play("e");
+      if (allegiance == "ally") {
+        sprMove.color = 0xaaffff;
+        sprAttack.color = 0xaaffff;
+      } else {
+        sprMove.color = 0xffaaff;
+        sprAttack.color = 0xffaaff;
+      }
     }
 
     override public function update():void
@@ -56,7 +67,6 @@ package
     override protected function attack(enemy:MyEntity):void
     {
       super.attack(enemy);
-      sprMove.color = 0x00ff00;
     }
 
     protected function randomMovement():void
