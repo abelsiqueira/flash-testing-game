@@ -23,7 +23,6 @@ package
       HP = maxHP;
       damage = 1;
       sprFps = 12;
-      speed = 1000;
       sprMove = new Spritemap(MOVE, 96, 96);
       sprAttack = new Spritemap(ATTACK, 96, 96);
       sprMove.add("n",  [ 0,  1,  2,  3,  4,  5,  6,  7], sprFps, true);
@@ -46,6 +45,10 @@ package
       //sprMove.scale = scale;
 
       super(allegiance, xx, yy);
+      speed = 100;
+      attackCooldown = 0.3;
+      attackDuration = 1;
+      attackMoment = 0.5;
       setHitbox(80, 66, 10, 16);
       graphic = sprMove;
       sprMove.play("e");

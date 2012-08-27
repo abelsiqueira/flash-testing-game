@@ -16,13 +16,13 @@ package
     protected var sprFps:int;
     protected var keyPressed:Vector.<Boolean> = new Vector.<Boolean>(4,false);
     protected var direction:String;
-    protected var speed:Number = 10;
+    protected var speed:Number;
     //protected var scale:Number = 0.8;
     protected var attackCounter:Number = 0;
     protected var attackCooldown:Number = 1;
     protected var attackDuration:Number = 2;
     protected var attackMoment:Number = 1;
-    protected var state:String = "idle";
+    protected var state:String = "move";
     protected var maxHP:int, HP:int;
     protected var damage:int;
     protected var nearEnemy:MyEntity = null;
@@ -37,13 +37,16 @@ package
       keyPressed[1] = false; 
       keyPressed[2] = false; 
       keyPressed[3] = false;
-      setHitbox(96, 96);
       direction = "s";
     }
 
     override public function update():void
     {
-      
+      if (type == "enemy") {
+        GetNearestEnemy("ally");
+      } else if (type == "ally") {
+        GetNearestEnemy("enemy");
+      }
       if (state == "attack") {
         attackCounter -= FP.elapsed;
         if (willAttack && attackCounter <= attackMoment) {
@@ -52,9 +55,12 @@ package
           willAttack = false;
         } else if (attackCounter <= 0) {
           attackCounter = attackCooldown;
-          state = "idle";
+          state = "inAttackRange";
         }
         return;
+      } else if (state == "inAttackRange") {
+        if (attackCounter <= 0)
+          state = "attack";
       }
       if (attackCounter > 0) {
         attackCounter -= FP.elapsed;
@@ -63,21 +69,19 @@ package
         }
       }
 
-      if (type == "enemy") {
-        GetNearestEnemy("ally");
-        movement();
-        if (world.typeCount("ally") == 0) {
-          return;
-        }
-      } else if (type == "ally") {
-        GetNearestEnemy("enemy");
-        movement();
-        if (world.typeCount("enemy") == 0) {
-          return;
-        }
-      }
+      var coll:Boolean;
+      if (collideWith(nearEnemy, x, y))
+        coll = true;
+      else 
+        coll = false;
 
-      if (collideWith(nearEnemy, x, y) && attackCounter == 0)
+      if (!coll)
+        state = "move";
+
+      if (state == "inAttackRange")
+        return;
+
+      if (coll && attackCounter <= 0)
         attack(nearEnemy);
       else {
         MoveToNearestEntity();
@@ -130,6 +134,10 @@ package
 
     protected function attack(enemy:MyEntity):void
     {
+      if (attackCounter > 0) {
+        state = "inAttackRange";
+        return;
+      }
       willAttack = true;
       attackCounter = attackDuration;
       state = "attack";
@@ -213,7 +221,7 @@ package
           graphic = sprMove;
           sprMove.play(direction);
         }
-        if (keyPressed[0]) {
+        if (keyPressed[0])
           y -= speed * FP.elapsed;
         else if (keyPressed[2])
           y += speed * FP.elapsed;
