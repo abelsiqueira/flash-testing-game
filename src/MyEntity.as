@@ -56,14 +56,14 @@ package
 
       if (type == "enemy") {
         GetNearestEnemy("ally");
+        movement();
         if (world.typeCount("ally") == 0) {
-          //movement();
           return;
         }
       } else if (type == "ally") {
         GetNearestEnemy("enemy");
+        movement();
         if (world.typeCount("enemy") == 0) {
-          //movement();
           return;
         }
       }
@@ -83,11 +83,13 @@ package
         nearEnemy = null;
         return;
       }
-      var enemies:Vector.<MyEntity>;
+      var enemies:Array= [];
       world.getType(al, enemies);
       var minDist:Number = 100000;
       var d:Number;
-      for each (var en:MyEntity in enemies) {
+      var len:int = enemies.length;
+      for (var i:int = 0; i < len; i++) {
+        var en:MyEntity = enemies[i];
         d = distanceFrom(en, false);
         if (d < minDist) {
           minDist = d;
@@ -103,19 +105,19 @@ package
         sprMove.color = 0x0000ff;
         return;
       }
+      keyPressed[0] = false;
+      keyPressed[1] = false;
+      keyPressed[2] = false;
+      keyPressed[3] = false;
       if (x < nearEnemy.x - 5) {
         keyPressed[1] = true;
-        keyPressed[3] = false;
       } else if (x > nearEnemy.x + 5) {
-        keyPressed[1] = false;
         keyPressed[3] = true;
       }
       if (y < nearEnemy.y - 5) {
-        keyPressed[0] = false;
         keyPressed[2] = true;
       } else if (y > nearEnemy.y + 5) {
         keyPressed[0] = true;
-        keyPressed[2] = false;
       }
     }
 

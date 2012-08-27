@@ -15,7 +15,7 @@ package
       addGraphic(background);
       add(new Base("enemy"));
       add(new Base("ally"));
-      add(new Red("ally", FP.width/2 - 48, FP.height/2 - 48));
+      add(new Red("player", FP.width/2 - 48, FP.height/2 - 48));
     }
 
   }

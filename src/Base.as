@@ -6,7 +6,7 @@ package
 
   public class Base extends Entity
   {
-    protected var timeBetweenWaves:Number = 3;
+    protected var timeBetweenWaves:Number = 10;
     protected var wavesTimer:Number = 0;
     protected var allegiance:String;
     [Embed(source = '../assets/Castle/red_castle_closed.png')]
@@ -14,8 +14,6 @@ package
     [Embed(source = '../assets/Castle/green_castle_closed.png')]
     private const GREEN_CLOSED:Class;
     private var image:Image;
-    //private var width:int = 192;
-    //private var height:int = 384;
 
     public function Base(al:String)
     {

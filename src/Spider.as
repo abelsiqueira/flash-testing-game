@@ -49,6 +49,7 @@ package
 
     override public function update():void
     {
+      randomMovement();
       super.update();
     }
 
@@ -58,7 +59,7 @@ package
       sprMove.color = 0x00ff00;
     }
 
-    override protected function movement():void
+    protected function randomMovement():void
     {
       if (FP.rand(100) < 1) {
         if (FP.rand(100) < 50)
@@ -70,7 +71,6 @@ package
         else
           keyPressed[3] = FP.choose(true, true, false);
       }
-      super.movement();
     }
 
   }
